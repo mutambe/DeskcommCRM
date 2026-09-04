@@ -13920,8 +13920,11 @@ alter table public.ai_faq_items alter column locale set default 'pt-PT';
 -- cifra é usada por `webhook_sources.secret_encrypted` e por
 -- `automation_rules` genéricos, não é exclusiva da Nuvemshop.
 
-drop trigger if exists trg_nuvemshop_products_updated_at on public.nuvemshop_products;
-drop policy if exists nuvemshop_products_tenant on public.nuvemshop_products;
+-- DROP TABLE sozinho já cascateia a remoção do trigger e da policy que
+-- pertencem à tabela — não dá pra DROP TRIGGER/POLICY ... ON antes disso
+-- porque, numa instalação fresh (a tabela nunca chega a existir no corpo
+-- deste arquivo), a cláusula ON referencia uma relação inexistente e falha
+-- mesmo com IF EXISTS no trigger/policy (o IF EXISTS não cobre a tabela).
 drop table if exists public.nuvemshop_products;
 
 -- ---- VARREDURA anon: função nova nasce exposta em quem ATUALIZA (migration 0116) ----

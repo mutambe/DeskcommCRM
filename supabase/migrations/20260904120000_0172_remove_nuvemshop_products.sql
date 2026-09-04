@@ -25,6 +25,9 @@
 -- Nuvemshop. Renomear é fora de escopo desta migration (risco
 -- desproporcional para uma limpeza de descontinuação).
 
-DROP TRIGGER IF EXISTS trg_nuvemshop_products_updated_at ON public.nuvemshop_products;
-DROP POLICY IF EXISTS nuvemshop_products_tenant ON public.nuvemshop_products;
+-- DROP TABLE sozinho já cascateia trigger e policy da própria tabela — não
+-- precisa (e não deve) dropar os dois antes: ver baseline.sql, que corrige
+-- o mesmo padrão porque lá a tabela pode nunca ter existido (instalação
+-- fresh), e `... ON public.nuvemshop_products` falha se a relação não
+-- existir, mesmo com IF EXISTS no trigger/policy.
 DROP TABLE IF EXISTS public.nuvemshop_products;
